@@ -1,0 +1,33 @@
+- name: Deploy Lambda Image Service
+  hosts: localhost
+  vars:
+    functions: "{{ lookup('file', '../functions/functions.json') | from_json }}"
+    region: "us-west-2"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
+  tasks: 
+
+#    - name: Deploy API Gateway API from Swagger file
+#      aws_api_gateway:
+#        api_id: 'w0nwngd3y2'
+#        swagger_file: ../swagger.yml
+#        stage: dev
+#        region: "{{ region }}"
+#        state: present
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
+
+    - name: Create or Update Lambda functions
+      lambda:
+        name: "{{ item }}"
+        runtime: nodejs8.10
+        handler: index.handler
+        role: arn:aws:iam::203423775578:role/service-role/lisDefaultRole
+        memory_size: 128
+        timeout: 180
+        region: "{{ region }}"
+        zip_file: "../dist/{{ item }}.zip"
+        state: present
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+      with_items: "{{ functions }}"

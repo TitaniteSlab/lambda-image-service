@@ -1,0 +1,30 @@
+---
+swagger: "2.0"
+info:
+  version: "2018-05-28T00:49:05Z"
+  title: "lis-api"
+host: "jy3gw4t23b.execute-api.us-west-2.amazonaws.com"
+basePath: "/dev"
+schemes:
+- "https"
+paths:
+  /lis-test:
+    x-amazon-apigateway-any-method:
+      responses:
+        200:
+          description: "200 response"
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:203423775578:function:lis-test/invocations"
+        responses:
+          .*:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "x-api-key"
+    in: "header"
