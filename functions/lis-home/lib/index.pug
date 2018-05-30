@@ -3,4 +3,14 @@ html
   head
     title #{title}
   body
-    p Hello!
+    p Hello! Enter your API key and upload an image to start.
+    form(action='/images' method='POST')
+    p
+      label API Key:
+      input(type='text' name='apiKey')
+    p
+      label Image:
+      input(type='file' name='image')
+    p
+      button(type='submit') Upload
+    
